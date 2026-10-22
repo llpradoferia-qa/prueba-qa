@@ -1,0 +1,144 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261021200947
+Username: DESKTOP-EISAOUN\ASUS
+RunAs User: DESKTOP-EISAOUN\ASUS
+Configuration Name: 
+Machine: DESKTOP-EISAOUN (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -File qa\evidencias\casos-api.ps1
+Process ID: 29756
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Ejecución: 2026-10-21 20:09:47 · Zona: SA Pacific Standard Time
+
+=== CN-01 Login (partición de equivalencia) ===
+CN-01.1   | V1 válido                                        | HTTP 200 | access_token recibido, token_type=Bearer, expires_in=28800
+CN-01.2   | V2 email mayúsculas                              | HTTP 200 | access_token recibido, token_type=Bearer, expires_in=28800
+CN-01.3   | V3 email con espacios                            | HTTP 200 | access_token recibido, token_type=Bearer, expires_in=28800
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Email o contraseña incorrectos","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.4   | I1 password incorrecta                           | HTTP 401 | Email o contraseña incorrectos
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Email o contraseña incorrectos","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.5   | I2 password mayúsculas                           | HTTP 401 | Email o contraseña incorrectos
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Email o contraseña incorrectos","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.6   | I3 password un char menos                        | HTTP 401 | Email o contraseña incorrectos
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Email o contraseña incorrectos","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.7   | I4 password espacio final                        | HTTP 401 | Email o contraseña incorrectos
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Email o contraseña incorrectos","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.8   | I5 email inexistente                             | HTTP 401 | Email o contraseña incorrectos
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Datos inválidos","errors":["email es obligatorio","password es obligatorio"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.9   | I6 campos vacíos                                 | HTTP 400 | Datos inválidos email es obligatorio; password es obligatorio
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"body inválido: invalid character 'b' looking for beginning of object key string","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/login"}
+"
+CN-01.10  | I7 body mal formado                              | HTTP 400 | body inválido: invalid character 'b' looking for beginning of object key string
+
+=== CN-03 Token ===
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Falta el token de autenticación","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/me"}
+"
+CN-03.1   | sin token                                        | HTTP 401 | Falta el token de autenticación
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":401,"message":"Token inválido o expirado","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/auth/me"}
+"
+CN-03.2   | token alterado                                   | HTTP 401 | Token inválido o expirado
+CN-03.3   | token válido                                     | HTTP 200 | {"email":"admin@energia.local","name":"Operador"}
+
+=== CN-04 size (valores límite) ===
+CN-04.1   | size 0 (no enviado)                              | HTTP 200 | count=12 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-104:ALERT, M-105:NORMAL, M-106:ALERT, M-107:NORMAL, M-108:NORMAL, M-109:CRITICAL, M-110:NORMAL]
+CN-04.2   | size 1                                           | HTTP 200 | count=12 filas=[M-101:NORMAL]
+CN-04.3   | size 100                                         | HTTP 200 | count=12 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-104:ALERT, M-105:NORMAL, M-106:ALERT, M-107:NORMAL, M-108:NORMAL, M-109:CRITICAL, M-110:NORMAL, M-111:NORMAL, M-112:CRITICAL]
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Filtros inválidos","errors":["pagination.size debe estar entre 1 y 100"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-04.4   | size 101                                         | HTTP 400 | Filtros inválidos pagination.size debe estar entre 1 y 100
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Filtros inválidos","errors":["pagination.size debe estar entre 1 y 100"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-04.5   | size -1                                          | HTTP 400 | Filtros inválidos pagination.size debe estar entre 1 y 100
+
+=== CN-05 page (valores límite) ===
+CN-05.1   | page 0 (no enviado)                              | HTTP 200 | count=12 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-104:ALERT, M-105:NORMAL, M-106:ALERT, M-107:NORMAL, M-108:NORMAL, M-109:CRITICAL, M-110:NORMAL]
+CN-05.2   | page 1                                           | HTTP 200 | count=12 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-104:ALERT, M-105:NORMAL, M-106:ALERT, M-107:NORMAL, M-108:NORMAL, M-109:CRITICAL, M-110:NORMAL]
+CN-05.3   | page 2 (última)                                  | HTTP 200 | count=12 filas=[M-111:NORMAL, M-112:CRITICAL]
+CN-05.4   | page 3 (después)                                 | HTTP 200 | count=12 filas=[]
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":500,"message":"Error interno del servidor","timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-05.5   | page -1                                          | HTTP 500 | Error interno del servidor
+
+=== CN-06 Filtro por estado ===
+CN-06.1   | NORMAL                                           | HTTP 200 | count=8 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-105:NORMAL, M-107:NORMAL, M-108:NORMAL, M-110:NORMAL, M-111:NORMAL]
+CN-06.2   | ALERT                                            | HTTP 200 | count=2 filas=[M-104:ALERT, M-106:ALERT]
+CN-06.3   | CRITICAL                                         | HTTP 200 | count=2 filas=[M-109:CRITICAL, M-112:CRITICAL]
+CN-06.4   | alert minúsculas                                 | HTTP 200 | count=2 filas=[M-104:ALERT, M-106:ALERT]
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Filtros inválidos","errors":["filter.status debe ser NORMAL, ALERT o CRITICAL"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-06.5   | ROJO                                             | HTTP 400 | Filtros inválidos filter.status debe ser NORMAL, ALERT o CRITICAL
+CN-06.6   | sin status                                       | HTTP 200 | count=12 filas=[M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-104:ALERT, M-105:NORMAL, M-106:ALERT, M-107:NORMAL, M-108:NORMAL, M-109:CRITICAL, M-110:NORMAL, M-111:NORMAL, M-112:CRITICAL]
+
+=== CN-07 Búsqueda por medidor ===
+CN-07.1   | M-109                                            | HTTP 200 | count=1 filas=[M-109:CRITICAL]
+CN-07.2   | 109 (parcial)                                    | HTTP 200 | count=1 filas=[M-109:CRITICAL]
+CN-07.3   | m-109 (minúsculas)                               | HTTP 200 | count=0 filas=[]
+CN-07.4   | M-11 (prefijo)                                   | HTTP 200 | count=3 filas=[M-110:NORMAL, M-111:NORMAL, M-112:CRITICAL]
+CN-07.5   | M-999 (inexistente)                              | HTTP 200 | count=0 filas=[]
+CN-07.6   | con espacios                                     | HTTP 200 | count=1 filas=[M-109:CRITICAL]
+CN-07.7   | 50 caracteres                                    | HTTP 200 | count=0 filas=[]
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Filtros inválidos","errors":["filter.meter_id no puede superar 50 caracteres"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-07.8   | 51 caracteres                                    | HTTP 400 | Filtros inválidos filter.meter_id no puede superar 50 caracteres
+
+=== CN-08 Ordenamiento ===
+CN-08.1   | severity DESC                                    | HTTP 200 | count=12 filas=[M-109:CRITICAL, M-112:CRITICAL, M-104:ALERT, M-106:ALERT, M-101:NORMAL, M-102:NORMAL, M-103:NORMAL, M-105:NORMAL, M-107:NORMAL, M-108:NORMAL, M-110:NORMAL, M-111:NORMAL]
+CN-08.2   | variation ASC                                    | HTTP 200 | count=12 filas=[M-105:NORMAL, M-107:NORMAL, M-108:NORMAL, M-101:NORMAL, M-110:NORMAL, M-112:CRITICAL, M-111:NORMAL, M-102:NORMAL, M-106:ALERT, M-103:NORMAL, M-104:ALERT, M-109:CRITICAL]
+CN-08.3   | consumption DESC                                 | HTTP 200 | count=12 filas=[M-109:CRITICAL, M-104:ALERT, M-106:ALERT, M-108:NORMAL, M-102:NORMAL, M-111:NORMAL, M-105:NORMAL, M-101:NORMAL, M-110:NORMAL, M-112:CRITICAL, M-103:NORMAL, M-107:NORMAL]
+CN-08.4   | desc minúsculas                                  | HTTP 200 | count=12 filas=[M-112:CRITICAL, M-111:NORMAL, M-110:NORMAL, M-109:CRITICAL, M-108:NORMAL, M-107:NORMAL, M-106:ALERT, M-105:NORMAL, M-104:ALERT, M-103:NORMAL, M-102:NORMAL, M-101:NORMAL]
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":400,"message":"Filtros inválidos","errors":["filter.sort_by debe ser meter_id, consumption, variation o severity"],"timestamp":"2026-10-22T01:09:48Z","path":"/api/v1/meter/getAll"}
+"
+CN-08.5   | sort_by precio                                   | HTTP 400 | Filtros inválidos filter.sort_by debe ser meter_id, consumption, variation o severity
+
+=== CN-09 Combinación de filtros ===
+CN-09.1   | CRITICAL + M-104                                 | HTTP 200 | count=0 filas=[]
+CN-09.2   | CRITICAL + consumo DESC                          | HTTP 200 | count=2 filas=[M-109:CRITICAL, M-112:CRITICAL]
+CN-09.3   | NORMAL + M-106                                   | HTTP 200 | count=0 filas=[]
+
+=== CN-10 Estado por medidor (tabla de decisión) ===
+CN-10     | M-101                                            | HTTP 200 | meter_id=M-101 status=NORMAL consumo=728.79 baseline=729.61 variacion=-0.11
+CN-10     | M-106                                            | HTTP 200 | meter_id=M-106 status=ALERT consumo=1362.11 baseline=1349.12 variacion=0.96
+CN-10     | M-109                                            | HTTP 200 | meter_id=M-109 status=CRITICAL consumo=2207.6 baseline=1052.15 variacion=109.82
+CN-10     | M-112                                            | HTTP 200 | meter_id=M-112 status=CRITICAL consumo=662.65 baseline=662.84 variacion=-0.03
+CN-10     | M-104                                            | HTTP 200 | meter_id=M-104 status=ALERT consumo=1725.63 baseline=1171.71 variacion=47.27
+
+=== CN-11 / CN-14 Anomalías: tipo, severidad, prioridad y hora de detección ===
+prioridad | medidor | tipo                | severidad | confianza | anomalia | detected_at (API)
+1         | M-109   | REAL_ANOMALY        | HIGH      | 0.95      | True     | 2026-09-12T14:00:00Z
+2         | M-112   | DATA_QUALITY        | HIGH      | 0.95      | True     | 2026-09-13T00:00:00Z
+3         | M-104   | EXPLAINABLE_ANOMALY | MEDIUM    | 0.86      | True     | 2026-09-11T00:00:00Z
+4         | M-106   | FALSE_POSITIVE      | LOW       | 0.86      | False    | 2026-09-08T00:00:00Z
+=== CN-13 Resumen del dashboard ===
+status_counts: normal=8 alert=2 critical=2
+consumo: last_day_kwh=12502.36 baseline_daily_kwh=10776.73 variation_pct=16.01
+data_range: 2026-09-01T00:00:00Z -> 2026-09-14T23:00:00Z
+
+=== CN-18 Detalle por ID ===
+CN-18.1   | M-109                                            | HTTP 200 | meter_id=M-109 status=CRITICAL consumo=2207.6 baseline=1052.15 variacion=109.82
+CN-18.2   | m-109                                            | HTTP 200 | meter_id=M-109 status=CRITICAL consumo=2207.6 baseline=1052.15 variacion=109.82
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":404,"message":"Medidor no encontrado","timestamp":"2026-10-22T01:09:49Z","path":"/api/v1/meter/getById/M-999"}
+"
+CN-18.3   | M-999                                            | HTTP 404 | Medidor no encontrado
+
+=== CN-20 Análisis inexistente ===
+PS>TerminatingError(Invoke-WebRequest): "{"status_code":404,"message":"Análisis no encontrado","timestamp":"2026-10-22T01:09:49Z","path":"/api/v1/ai/analysis/AN-9999"}
+"
+CN-20.3   | AN-9999                                          | HTTP 404 | Análisis no encontrado
+**********************
+Windows PowerShell transcript end
+End time: 20261021200949
+**********************
